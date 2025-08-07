@@ -12,10 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
 
-import app.domain.user.UserService;
-import app.domain.user.model.dto.response.GetUserInfoResponse;
-import app.domain.user.model.entity.User;
-import app.domain.user.model.entity.enums.UserRole;
+import app.user.UserService;
+import app.user.model.dto.response.GetUserInfoResponse;
+import app.user.model.entity.User;
+import app.user.model.entity.enums.UserRole;
 import app.global.SecurityUtil;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;

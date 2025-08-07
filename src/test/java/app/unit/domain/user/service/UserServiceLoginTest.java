@@ -20,12 +20,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import app.domain.user.UserService;
-import app.domain.user.model.UserRepository;
-import app.domain.user.model.dto.request.LoginRequest;
-import app.domain.user.model.dto.response.LoginResponse;
-import app.domain.user.model.entity.User;
-import app.domain.user.status.UserErrorStatus;
+import app.user.UserService;
+import app.user.model.UserRepository;
+import app.user.model.dto.request.LoginRequest;
+import app.user.model.dto.response.LoginResponse;
+import app.user.model.entity.User;
+import app.user.status.UserErrorStatus;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 import app.global.jwt.JwtTokenProvider;

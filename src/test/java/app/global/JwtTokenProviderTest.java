@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import app.domain.user.model.entity.User;
-import app.domain.user.model.entity.enums.UserRole;
+import app.user.model.entity.User;
+import app.user.model.entity.enums.UserRole;
 import app.global.jwt.JwtTokenProvider;
 
 @DisplayName("JwtTokenProvider 단위 테스트")

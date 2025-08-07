@@ -20,16 +20,16 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.domain.user.UserController;
-import app.domain.user.UserService;
-import app.domain.user.model.dto.request.CreateUserRequest;
-import app.domain.user.model.dto.request.LoginRequest;
-import app.domain.user.model.dto.response.CreateUserResponse;
-import app.domain.user.model.dto.response.GetUserInfoResponse;
-import app.domain.user.model.dto.response.LoginResponse;
-import app.domain.user.model.entity.enums.UserRole;
-import app.domain.user.status.UserErrorStatus;
-import app.domain.user.status.UserSuccessStatus;
+import app.user.UserController;
+import app.user.UserService;
+import app.user.model.dto.request.CreateUserRequest;
+import app.user.model.dto.request.LoginRequest;
+import app.user.model.dto.response.CreateUserResponse;
+import app.user.model.dto.response.GetUserInfoResponse;
+import app.user.model.dto.response.LoginResponse;
+import app.user.model.entity.enums.UserRole;
+import app.user.status.UserErrorStatus;
+import app.user.status.UserSuccessStatus;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 import app.global.config.MockSecurityConfig;

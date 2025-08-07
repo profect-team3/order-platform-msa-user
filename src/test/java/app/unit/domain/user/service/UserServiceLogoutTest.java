@@ -22,8 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import app.domain.user.UserService;
-import app.domain.user.status.UserErrorStatus;
+import app.user.UserService;
+import app.user.status.UserErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 import app.global.jwt.JwtTokenProvider;
 

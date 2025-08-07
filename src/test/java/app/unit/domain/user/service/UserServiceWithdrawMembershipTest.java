@@ -22,9 +22,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import app.domain.user.UserService;
-import app.domain.user.model.UserRepository;
-import app.domain.user.model.entity.User;
+import app.user.UserService;
+import app.user.model.UserRepository;
+import app.user.model.entity.User;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 

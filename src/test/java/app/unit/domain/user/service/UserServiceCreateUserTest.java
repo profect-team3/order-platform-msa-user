@@ -19,13 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import app.domain.cart.model.entity.Cart;
 import app.domain.cart.model.repository.CartRepository;
-import app.domain.user.UserService;
-import app.domain.user.model.UserRepository;
-import app.domain.user.model.dto.request.CreateUserRequest;
-import app.domain.user.model.dto.response.CreateUserResponse;
-import app.domain.user.model.entity.User;
-import app.domain.user.model.entity.enums.UserRole;
-import app.domain.user.status.UserErrorStatus;
+import app.user.UserService;
+import app.user.model.UserRepository;
+import app.user.model.dto.request.CreateUserRequest;
+import app.user.model.dto.response.CreateUserResponse;
+import app.user.model.entity.User;
+import app.user.model.entity.enums.UserRole;
+import app.user.status.UserErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 
 @ExtendWith(MockitoExtension.class)
