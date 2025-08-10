@@ -1,6 +1,6 @@
 package app.user.model;
 
-import static app.domain.user.model.entity.QUser.*;
+import static app.user.model.entity.QUser.*;
 
 import java.util.Optional;
 
