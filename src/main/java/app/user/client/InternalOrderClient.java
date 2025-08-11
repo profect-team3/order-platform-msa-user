@@ -19,7 +19,7 @@ public class InternalOrderClient {
 	private String orderServiceUrl;
 
 	public String createCart(Long userId) {
-		String url = orderServiceUrl + "/cart/" + userId;
+		String url = orderServiceUrl + "internal/cart/" + userId;
 
 		return restTemplate.postForObject(url, null, String.class);
 	}
