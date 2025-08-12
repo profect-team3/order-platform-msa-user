@@ -1,7 +1,5 @@
 package app.user;
 
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -12,12 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 //import app.domain.cart.model.entity.Cart;
 //import app.domain.cart.model.repository.CartRepository;
+import app.user.client.InternalOrderClient;
 import app.user.model.UserRepository;
 import app.user.model.dto.request.CreateUserRequest;
-import app.user.model.dto.request.LoginRequest;
 import app.user.model.dto.response.CreateUserResponse;
 import app.user.model.dto.response.GetUserInfoResponse;
-import app.user.model.dto.response.LoginResponse;
 import app.user.model.entity.User;
 import app.user.status.UserErrorStatus;
 import app.global.SecurityUtil;
@@ -34,9 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
 	private final UserRepository userRepository;
-//	private final CartRepository cartRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final InternalOrderClient internalOrderClient;
 	private final RedisTemplate<String, String> redisTemplate;
 	private final SecurityUtil securityUtil;
 	private static final String REFRESH_TOKEN_PREFIX = "RT:";
@@ -61,7 +58,7 @@ public class UserService {
 
 		try {
 			User savedUser = userRepository.save(user);
-//			cartRepository.save(Cart.builder().user(savedUser).build());
+			internalOrderClient.createCart(savedUser.getUserId());
 			return CreateUserResponse.from(savedUser);
 		} catch (DataAccessException e) {
 			log.error("데이터베이스에 사용자 등록을 실패했습니다.", e);
@@ -69,65 +66,6 @@ public class UserService {
 		}
 	}
 
-	@Transactional
-	public LoginResponse login(LoginRequest request) {
-		User user = userRepository.findByUsername(request.getUsername())
-			.orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
-
-		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-			throw new GeneralException(UserErrorStatus.INVALID_PASSWORD);
-		}
-
-		String accessToken = jwtTokenProvider.createAccessToken(user);
-		String refreshToken = jwtTokenProvider.createRefreshToken(user);
-
-		redisTemplate.opsForValue().set(
-			REFRESH_TOKEN_PREFIX + user.getUserId(),
-			refreshToken,
-			jwtTokenProvider.getRefreshTokenValidityInMilliseconds(),
-			TimeUnit.MILLISECONDS
-		);
-
-		return LoginResponse.builder()
-			.accessToken(accessToken)
-			.refreshToken(refreshToken)
-			.build();
-	}
-
-	@Transactional
-	public void logout() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(
-			authentication.getPrincipal())) {
-			throw new GeneralException(UserErrorStatus.AUTHENTICATION_NOT_FOUND);
-		}
-
-		String userId = authentication.getName();
-		Object credentials = authentication.getCredentials();
-		if (!(credentials instanceof String accessToken)) {
-			String refreshTokenKey = REFRESH_TOKEN_PREFIX + userId;
-			if (Boolean.TRUE.equals(redisTemplate.hasKey(refreshTokenKey))) {
-				redisTemplate.delete(refreshTokenKey);
-			}
-			return;
-		}
-
-		String refreshTokenKey = REFRESH_TOKEN_PREFIX + userId;
-		if (Boolean.TRUE.equals(redisTemplate.hasKey(refreshTokenKey))) {
-			redisTemplate.delete(refreshTokenKey);
-		}
-
-		Long expiration = jwtTokenProvider.getExpiration(accessToken);
-		if (expiration > 0) {
-			redisTemplate.opsForValue().set(
-				BLACKLIST_PREFIX + accessToken,
-				"logout",
-				expiration,
-				TimeUnit.MILLISECONDS
-			);
-		}
-	}
 
 	@Transactional
 	public void withdrawMembership() {
@@ -141,7 +79,7 @@ public class UserService {
 
 		userRepository.delete(user);
 
-		logout();
+		//logout();
 	}
 
 	@Transactional
