@@ -1,7 +1,5 @@
 package app.domain.user.client;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -14,15 +12,15 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class InternalOrderClient {
+public class InternalAuthClient {
 
 	private final RestTemplate restTemplate;
 
-	@Value("${order.service.url:http://localhost:8084}")
-	private String orderServiceUrl;
+	@Value("${auth.service.url:http://localhost:8083}")
+	private String authServiceUrl;
 
-	public ApiResponse<String> createCart(Long userId) {
-		String url = orderServiceUrl + "/internal/cart/" + userId;
+	public ApiResponse<String> logout() {
+		String url = authServiceUrl + "/internal/auth/logout";
 
 		ResponseEntity<ApiResponse<String>> response = restTemplate.exchange(
 			url,

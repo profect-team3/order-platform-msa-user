@@ -20,6 +20,7 @@ import app.domain.user.model.dto.response.GetUserInfoResponse;
 import app.domain.user.model.entity.User;
 import app.domain.user.status.UserErrorStatus;
 import app.global.SecurityUtil;
+import app.global.apiPayload.ApiResponse;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 import app.global.jwt.JwtTokenProvider;
@@ -35,12 +36,8 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final InternalAuthClient internalAuthClient;
-	private final JwtTokenProvider jwtTokenProvider;
 	private final InternalOrderClient internalOrderClient;
-	private final RedisTemplate<String, String> redisTemplate;
 	private final SecurityUtil securityUtil;
-	private static final String REFRESH_TOKEN_PREFIX = "RT:";
-	private static final String BLACKLIST_PREFIX = "BL:";
 
 	@Transactional
 	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
@@ -61,7 +58,10 @@ public class UserService {
 
 		try {
 			User savedUser = userRepository.save(user);
-			internalOrderClient.createCart(savedUser.getUserId());
+			ApiResponse<String> response =internalOrderClient.createCart(savedUser.getUserId());
+			if(!response.isSuccess()){
+				throw new GeneralException(UserErrorStatus.CREATE_CART_FAILED);
+			}
 			return CreateUserResponse.from(savedUser);
 		} catch (DataAccessException e) {
 			log.error("데이터베이스에 사용자 등록을 실패했습니다.", e);
@@ -81,11 +81,10 @@ public class UserService {
 		user.anonymizeForWithdrawal();
 
 		userRepository.delete(user);
-		ResponseEntity<String> response =internalAuthClient.logout();
-		// if(response.getStatusCode().is4xxClientError())
-		// 	throw new GeneralException(ErrorStatus._BAD_REQUEST);
-		// else if(response.getStatusCode().is5xxServerError())
-		// 	throw new GeneralException(ErrorStatus._INTERNAL_SERVER_ERROR);
+		ApiResponse<String> response =internalAuthClient.logout();
+		if(!response.isSuccess()){
+			throw new GeneralException(UserErrorStatus.LOGOUT_FAILED);
+		}
 	}
 
 	@Transactional
