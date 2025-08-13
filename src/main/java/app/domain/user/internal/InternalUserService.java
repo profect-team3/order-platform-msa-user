@@ -1,0 +1,29 @@
+package app.domain.user.internal;
+
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
+import app.domain.user.model.UserRepository;
+import app.domain.user.model.entity.User;
+import app.global.apiPayload.code.status.ErrorStatus;
+import app.global.apiPayload.exception.GeneralException;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class InternalUserService {
+
+	private final UserRepository userRepository;
+
+	public Boolean isUserExists(Long userId) {
+		boolean exists = userRepository.existsById(userId);
+		return exists;
+	}
+
+	public String getUserName(Long userId) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+		return user.getUsername();
+	}
+}
