@@ -17,7 +17,8 @@ public enum UserSuccessStatus implements BaseCode {
 	WITHDRAW_SUCCESS(HttpStatus.OK, "USER204", "회원 탈퇴가 성공적으로 처리되었습니다."),
 	USER_PROFILE_FETCHED(HttpStatus.OK, "USER205", "회원 정보 조회에 성공했습니다."),
 	USER_EXISTS(HttpStatus.OK,"USER206","해당 회원이 존재합니다"),
-	USER_NAME_FETCHED(HttpStatus.OK,"USER207","해당 회원의 이름 조회에 성공했습니다.");
+	USER_NAME_FETCHED(HttpStatus.OK,"USER207","해당 회원의 이름 조회에 성공했습니다."),
+	USER_INFO_FETCHED(HttpStatus.OK,"USER208","해당 회원의 정보 조회에 성공했습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;

@@ -15,12 +15,12 @@ public class GetUserInfoResponse {
 	private String nickname;
 	private String realName;
 	private String phoneNumber;
-	private UserRole userRole;
+	private String userRole;
 
 	public GetUserInfoResponse() {
 	}
 
-	public GetUserInfoResponse(Long userId, String username, String email, String nickname, String realName, String phoneNumber, UserRole userRole) {
+	public GetUserInfoResponse(Long userId, String username, String email, String nickname, String realName, String phoneNumber, String userRole) {
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
@@ -38,7 +38,7 @@ public class GetUserInfoResponse {
 			.nickname(user.getNickname())
 			.realName(user.getRealName())
 			.phoneNumber(user.getPhoneNumber())
-			.userRole(user.getUserRole())
+			.userRole(String.valueOf(user.getUserRole()))
 			.build();
 	}
 }
