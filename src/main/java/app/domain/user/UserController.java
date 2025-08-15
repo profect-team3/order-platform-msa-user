@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.domain.user.model.dto.request.CreateUserRequest;
@@ -35,14 +36,14 @@ public class UserController {
 
 	@DeleteMapping("/withdraw")
 	@Operation(summary = "회원 탈퇴 API", description = "현재 로그인된 사용자의 계정을 비활성화하고 개인정보를 익명화 처리합니다.")
-	public ApiResponse<Void> withdraw() {
-		userService.withdrawMembership();
+	public ApiResponse<Void> withdraw(@RequestParam Long userId) {
+		userService.withdrawMembership(userId);
 		return ApiResponse.onSuccess(UserSuccessStatus.WITHDRAW_SUCCESS, null);
 	}
 
 	@GetMapping("/info")
 	@Operation(summary = "회원 정보 조회 API", description = "현재 로그인된 사용자의 정보를 조회합니다.")
-	public ApiResponse<GetUserInfoResponse> getUserInfo(@PathVariable Long userId) {
+	public ApiResponse<GetUserInfoResponse> getUserInfo(@RequestParam Long userId) {
 		GetUserInfoResponse response = userService.getUserInfo(userId);
 		return ApiResponse.onSuccess(UserSuccessStatus.USER_PROFILE_FETCHED, response);
 	}

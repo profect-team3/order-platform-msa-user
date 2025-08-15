@@ -47,7 +47,7 @@ public class ManagerController {
 		description = "선택한 유저의 자세한 정보와 등록한 주소를 확인 합니다."
 	)
 	public ApiResponse<GetCustomerDetailResponse> getUsersDetailById(
-		@PathVariable("userId") Long userId
+		@RequestParam("userId") Long userId
 	) {
 		return ApiResponse.onSuccess(ManagerSuccessStatus.MANAGER_GET_CUSTOMER_DETAIL_OK,managerService.getCustomerDetailById(userId));
 	}

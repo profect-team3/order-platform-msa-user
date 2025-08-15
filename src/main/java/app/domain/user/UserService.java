@@ -65,12 +65,10 @@ public class UserService {
 
 
 	@Transactional
-	public void withdrawMembership() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Long currentUserId = Long.parseLong(authentication.getName());
+	public void withdrawMembership(Long userId) {
 
-		User user = userRepository.findById(currentUserId)
-			.orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+		User user = userRepository.findByUserId(userId)
+				.orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
 		user.anonymizeForWithdrawal();
 
