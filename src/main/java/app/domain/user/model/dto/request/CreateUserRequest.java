@@ -1,7 +1,6 @@
 package app.domain.user.model.dto.request;
 
 import app.domain.user.model.entity.enums.UserRole;
-import app.global.validation.annotation.ValidUserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -38,7 +37,6 @@ public class CreateUserRequest {
 	private String phoneNumber;
 
 	@NotNull
-	@ValidUserRole
 	private UserRole userRole;
 
 	public CreateUserRequest() {

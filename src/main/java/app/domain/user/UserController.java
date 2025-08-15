@@ -2,6 +2,7 @@ package app.domain.user;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +42,8 @@ public class UserController {
 
 	@GetMapping("/info")
 	@Operation(summary = "회원 정보 조회 API", description = "현재 로그인된 사용자의 정보를 조회합니다.")
-	public ApiResponse<GetUserInfoResponse> getUserInfo() {
-		GetUserInfoResponse response = userService.getUserInfo();
+	public ApiResponse<GetUserInfoResponse> getUserInfo(@PathVariable Long userId) {
+		GetUserInfoResponse response = userService.getUserInfo(userId);
 		return ApiResponse.onSuccess(UserSuccessStatus.USER_PROFILE_FETCHED, response);
 	}
 }

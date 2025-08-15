@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,17 +31,17 @@ public class CustomerAddressController {
 
 	@GetMapping("/list")
 	@Operation(summary = "/api/customer/address/list", description = "사용자 주소지 목록 조회")
-	public ApiResponse<List<GetCustomerAddressListResponse>> GetCustomerAddresses() {
+	public ApiResponse<List<GetCustomerAddressListResponse>> GetCustomerAddresses(@PathVariable Long userId) {
 		return ApiResponse.onSuccess(CustomerSuccessStatus.ADDRESS_LIST_FOUND,
-			customerAddressService.getCustomerAddresses());
+			customerAddressService.getCustomerAddresses(userId));
 	}
 
 	@PostMapping("/add")
 	@Operation(summary = "/api/customer/address/add", description = "사용자 주소지 등록")
 	public ApiResponse<AddCustomerAddressResponse> AddCustomerAddress(
-		@RequestBody @Valid AddCustomerAddressRequest request) {
+		@RequestBody @Valid AddCustomerAddressRequest request, @PathVariable Long userId) {
 		validateAddCustomerRequest(request);
-		AddCustomerAddressResponse response = customerAddressService.addCustomerAddress(request);
+		AddCustomerAddressResponse response = customerAddressService.addCustomerAddress(request,userId);
 		return ApiResponse.onSuccess(CustomerSuccessStatus.ADDRESS_ADDED, response);
 	}
 

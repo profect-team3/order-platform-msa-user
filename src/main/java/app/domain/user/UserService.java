@@ -1,16 +1,13 @@
 package app.domain.user;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-//import app.domain.cart.model.entity.Cart;
-//import app.domain.cart.model.repository.CartRepository;
+
 import app.domain.user.client.InternalAuthClient;
 import app.domain.user.client.InternalOrderClient;
 import app.domain.user.model.UserRepository;
@@ -19,11 +16,9 @@ import app.domain.user.model.dto.response.CreateUserResponse;
 import app.domain.user.model.dto.response.GetUserInfoResponse;
 import app.domain.user.model.entity.User;
 import app.domain.user.status.UserErrorStatus;
-import app.global.SecurityUtil;
 import app.global.apiPayload.ApiResponse;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
-import app.global.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +32,6 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final InternalAuthClient internalAuthClient;
 	private final InternalOrderClient internalOrderClient;
-	private final SecurityUtil securityUtil;
 
 	@Transactional
 	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
@@ -88,8 +82,9 @@ public class UserService {
 	}
 
 	@Transactional
-	public GetUserInfoResponse getUserInfo() {
-		User currentUser = securityUtil.getCurrentUser();
+	public GetUserInfoResponse getUserInfo(Long userId) {
+		User currentUser = userRepository.findByUserId(userId)
+			.orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
 		return GetUserInfoResponse.from(currentUser);
 	}
 

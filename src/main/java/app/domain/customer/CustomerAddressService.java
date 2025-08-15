@@ -10,7 +10,8 @@ import app.domain.customer.dto.request.AddCustomerAddressRequest;
 import app.domain.customer.dto.response.AddCustomerAddressResponse;
 import app.domain.customer.dto.response.GetCustomerAddressListResponse;
 import app.domain.customer.status.CustomerErrorStatus;
-import app.global.SecurityUtil;
+import app.domain.user.model.UserRepository;
+import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 import app.domain.user.model.UserAddressRepository;
 import app.domain.user.model.entity.User;
@@ -22,15 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class CustomerAddressService {
 
 	private final UserAddressRepository userAddressRepository;
-	private final SecurityUtil securityUtil;
+	private final UserRepository userRepository;
 
 	@Transactional(readOnly = true)
-	// @PreAuthorize("hasAuthority('CUSTOMER')")
-	public List<GetCustomerAddressListResponse> getCustomerAddresses() throws GeneralException {
-		User user = securityUtil.getCurrentUser();
+	public List<GetCustomerAddressListResponse> getCustomerAddresses(Long userId){
 
 		try {
-			return userAddressRepository.findAllByUserUserId(user.getUserId())
+			return userAddressRepository.findAllByUserUserId(userId)
 					.stream()
 					.map(GetCustomerAddressListResponse::from)
 					.toList();
@@ -41,9 +40,10 @@ public class CustomerAddressService {
 
 	@Transactional
 	// @PreAuthorize("hasAuthority('CUSTOMER')")
-	public AddCustomerAddressResponse addCustomerAddress(AddCustomerAddressRequest request) {
-		User user = securityUtil.getCurrentUser();
+	public AddCustomerAddressResponse addCustomerAddress(AddCustomerAddressRequest request,Long userId) {
 
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(()-> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 		if (userAddressRepository.existsByUserAndAddressAndAddressDetail(user, request.getAddress(), request.getAddressDetail())) {
 			throw new GeneralException(CustomerErrorStatus.ADDRESS_ALREADY_EXISTS);
 		}

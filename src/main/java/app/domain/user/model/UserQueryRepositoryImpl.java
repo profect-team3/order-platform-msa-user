@@ -10,7 +10,8 @@ import org.springframework.util.StringUtils;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import app.user.model.entity.QUser;
+
+import app.domain.user.model.entity.QUser;
 import app.domain.user.model.entity.User;
 import lombok.RequiredArgsConstructor;
 
