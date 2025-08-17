@@ -6,7 +6,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import app.domain.user.client.InternalAuthClient;
 import app.domain.user.client.InternalOrderClient;
@@ -53,13 +54,13 @@ public class UserService {
 		try {
 			User savedUser = userRepository.save(user);
 			ApiResponse<String> response =internalOrderClient.createCart(savedUser.getUserId());
-			if(!response.isSuccess()){
-				throw new GeneralException(UserErrorStatus.CREATE_CART_FAILED);
-			}
 			return CreateUserResponse.from(savedUser);
 		} catch (DataAccessException e) {
 			log.error("데이터베이스에 사용자 등록을 실패했습니다.", e);
 			throw new GeneralException(ErrorStatus._INTERNAL_SERVER_ERROR);
+		} catch (HttpServerErrorException | HttpClientErrorException e) {
+			log.error("CartService Error :{}" ,e.getResponseBodyAsString());
+			throw new GeneralException(UserErrorStatus.CREATE_CART_FAILED);
 		}
 	}
 
@@ -73,8 +74,10 @@ public class UserService {
 		user.anonymizeForWithdrawal();
 
 		userRepository.delete(user);
-		ApiResponse<String> response =internalAuthClient.logout();
-		if(!response.isSuccess()){
+		try {
+			ApiResponse<String> response =internalAuthClient.logout();
+		} catch (HttpServerErrorException | HttpClientErrorException e){
+			log.error("AuthService Error: {}",e.getResponseBodyAsString());
 			throw new GeneralException(UserErrorStatus.LOGOUT_FAILED);
 		}
 	}
