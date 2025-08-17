@@ -1,5 +1,6 @@
 package app.domain.user;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import app.commonSecurity.TokenPrincipalParser;
 import app.domain.user.client.InternalAuthClient;
 import app.domain.user.client.InternalOrderClient;
+import app.domain.user.event.UserSignedUpEvent;
 import app.domain.user.model.UserRepository;
 import app.domain.user.model.dto.request.CreateUserRequest;
 import app.domain.user.model.dto.response.CreateUserResponse;
@@ -33,6 +36,8 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final InternalAuthClient internalAuthClient;
 	private final InternalOrderClient internalOrderClient;
+	private final TokenPrincipalParser tokenPrincipalParser;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional
 	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
@@ -53,7 +58,7 @@ public class UserService {
 
 		try {
 			User savedUser = userRepository.save(user);
-			ApiResponse<String> response =internalOrderClient.createCart(savedUser.getUserId());
+			eventPublisher.publishEvent(new UserSignedUpEvent(savedUser.getUserId()));
 			return CreateUserResponse.from(savedUser);
 		} catch (DataAccessException e) {
 			log.error("데이터베이스에 사용자 등록을 실패했습니다.", e);
@@ -67,12 +72,9 @@ public class UserService {
 
 	@Transactional
 	public void withdrawMembership(Long userId) {
-
 		User user = userRepository.findByUserId(userId)
 				.orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
-
 		user.anonymizeForWithdrawal();
-
 		userRepository.delete(user);
 		try {
 			ApiResponse<String> response =internalAuthClient.logout();
@@ -83,7 +85,10 @@ public class UserService {
 	}
 
 	@Transactional
-	public GetUserInfoResponse getUserInfo(Long userId) {
+	public GetUserInfoResponse getUserInfo(Authentication authentication) {
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
+
 		User currentUser = userRepository.findByUserId(userId)
 			.orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
 		return GetUserInfoResponse.from(currentUser);
