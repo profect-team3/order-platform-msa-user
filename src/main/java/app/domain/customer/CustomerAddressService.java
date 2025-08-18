@@ -1,16 +1,22 @@
 package app.domain.customer;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import app.commonSecurity.TokenPrincipalParser;
 import app.domain.customer.dto.request.AddCustomerAddressRequest;
+import app.domain.customer.dto.request.UpdateCustomerAddressRequest;
 import app.domain.customer.dto.response.AddCustomerAddressResponse;
 import app.domain.customer.dto.response.GetCustomerAddressListResponse;
+import app.domain.customer.dto.response.UpdateCustomerAddressResponse;
 import app.domain.customer.status.CustomerErrorStatus;
 import app.domain.user.model.UserRepository;
+import app.domain.user.status.UserErrorStatus;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
 import app.domain.user.model.UserAddressRepository;
@@ -24,9 +30,12 @@ public class CustomerAddressService {
 
 	private final UserAddressRepository userAddressRepository;
 	private final UserRepository userRepository;
+	private final TokenPrincipalParser tokenPrincipalParser;
 
 	@Transactional(readOnly = true)
-	public List<GetCustomerAddressListResponse> getCustomerAddresses(Long userId){
+	public List<GetCustomerAddressListResponse> getCustomerAddresses(Authentication authentication){
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
 
 		try {
 			return userAddressRepository.findAllByUserUserId(userId)
@@ -39,8 +48,9 @@ public class CustomerAddressService {
 	}
 
 	@Transactional
-	// @PreAuthorize("hasAuthority('CUSTOMER')")
-	public AddCustomerAddressResponse addCustomerAddress(AddCustomerAddressRequest request,Long userId) {
+	public AddCustomerAddressResponse addCustomerAddress(AddCustomerAddressRequest request,Authentication authentication) {
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
 
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(()-> new GeneralException(ErrorStatus.USER_NOT_FOUND));
@@ -82,5 +92,45 @@ public class CustomerAddressService {
 		} catch (DataAccessException e) {
 			throw new GeneralException(CustomerErrorStatus.ADDRESS_ADD_FAILED);
 		}
+	}
+
+	@Transactional
+	public UpdateCustomerAddressResponse updateAddress(UUID addressId, UpdateCustomerAddressRequest req, Authentication authentication) {
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
+
+		UserAddress addressToUpdate = userAddressRepository.findById(addressId)
+			.orElseThrow(() -> new GeneralException(UserErrorStatus.ADDRESS_NOT_FOUND));
+
+		if (addressToUpdate.getDeletedAt() != null) {
+			throw new GeneralException(UserErrorStatus.ADDRESS_ALREADY_DELETED);
+		}
+
+		if (!addressToUpdate.getUser().getUserId().equals(userId)) {
+			throw new GeneralException(UserErrorStatus.ADDRESS_ACCESS_DENIED);
+		}
+
+		UserAddress updatedAddress = addressToUpdate.update(req);
+		return UpdateCustomerAddressResponse.from(updatedAddress);
+	}
+
+	@Transactional
+	public String deleteAddress(UUID addressId, Authentication authentication) {
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
+
+		UserAddress addressToDelete = userAddressRepository.findById(addressId)
+			.orElseThrow(() -> new GeneralException(UserErrorStatus.ADDRESS_NOT_FOUND));
+
+		if (!addressToDelete.getUser().getUserId().equals(userId)) {
+			throw new GeneralException(UserErrorStatus.ADDRESS_ACCESS_DENIED);
+		}
+
+		if (addressToDelete.isDefault()) {
+			throw new GeneralException(UserErrorStatus.CANNOT_DELETE_DEFAULT_ADDRESS);
+		}
+
+		userAddressRepository.delete(addressToDelete);
+		return "Address deleted successfully";
 	}
 }

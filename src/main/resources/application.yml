@@ -26,6 +26,12 @@ spring:
       password: ${REDIS_PASSWORD}
       database: 0
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8083/oauth/jwks
+
 jwt:
   secret: ${JWT_SECRET_KEY}
   access-token-validity-in-milliseconds: 3600000 # 1 hour

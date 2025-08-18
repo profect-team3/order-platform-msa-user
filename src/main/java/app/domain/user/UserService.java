@@ -2,15 +2,14 @@ package app.domain.user;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import app.commonSecurity.TokenPrincipalParser;
 import app.domain.user.client.InternalAuthClient;
-import app.domain.user.client.InternalOrderClient;
 import app.domain.user.model.UserRepository;
 import app.domain.user.model.dto.request.CreateUserRequest;
 import app.domain.user.model.dto.response.CreateUserResponse;
@@ -20,6 +19,7 @@ import app.domain.user.status.UserErrorStatus;
 import app.global.apiPayload.ApiResponse;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +32,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final InternalAuthClient internalAuthClient;
-	private final InternalOrderClient internalOrderClient;
+	private final TokenPrincipalParser tokenPrincipalParser;
 
 	@Transactional
 	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
@@ -53,26 +53,25 @@ public class UserService {
 
 		try {
 			User savedUser = userRepository.save(user);
-			ApiResponse<String> response =internalOrderClient.createCart(savedUser.getUserId());
 			return CreateUserResponse.from(savedUser);
 		} catch (DataAccessException e) {
 			log.error("데이터베이스에 사용자 등록을 실패했습니다.", e);
 			throw new GeneralException(ErrorStatus._INTERNAL_SERVER_ERROR);
 		} catch (HttpServerErrorException | HttpClientErrorException e) {
-			log.error("CartService Error :{}" ,e.getResponseBodyAsString());
-			throw new GeneralException(UserErrorStatus.CREATE_CART_FAILED);
+			log.error("Error during user creation: {}", e.getResponseBodyAsString());
+			throw new GeneralException(UserErrorStatus.CREATE_USER_FAILED);
 		}
 	}
 
 
 	@Transactional
-	public void withdrawMembership(Long userId) {
+	public void withdrawMembership(Authentication authentication) {
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
 
 		User user = userRepository.findByUserId(userId)
 				.orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
-
 		user.anonymizeForWithdrawal();
-
 		userRepository.delete(user);
 		try {
 			ApiResponse<String> response =internalAuthClient.logout();
@@ -83,7 +82,10 @@ public class UserService {
 	}
 
 	@Transactional
-	public GetUserInfoResponse getUserInfo(Long userId) {
+	public GetUserInfoResponse getUserInfo(Authentication authentication) {
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
+
 		User currentUser = userRepository.findByUserId(userId)
 			.orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
 		return GetUserInfoResponse.from(currentUser);
