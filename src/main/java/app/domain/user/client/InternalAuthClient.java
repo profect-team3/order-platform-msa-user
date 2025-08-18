@@ -19,16 +19,15 @@ public class InternalAuthClient {
 	@Value("${auth.service.url:http://localhost:8083}")
 	private String authServiceUrl;
 
-	public ApiResponse<String> logout() {
-		String url = authServiceUrl + "/internal/auth/logout";
+	public ApiResponse<Void> logout() {
+		String url = authServiceUrl + "/logout";
 
-		ResponseEntity<ApiResponse<String>> response = restTemplate.exchange(
+		ResponseEntity<ApiResponse<Void>> response = restTemplate.exchange(
 			url,
 			HttpMethod.POST,
 			null,
-			new ParameterizedTypeReference<ApiResponse<String>>() {}
+			new ParameterizedTypeReference<ApiResponse<Void>>() {}
 		);
-
 		return response.getBody();
 	}
 }

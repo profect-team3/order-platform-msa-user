@@ -74,7 +74,7 @@ public class UserService {
 		user.anonymizeForWithdrawal();
 		userRepository.delete(user);
 		try {
-			ApiResponse<String> response =internalAuthClient.logout();
+			ApiResponse<Void> response =internalAuthClient.logout();
 		} catch (HttpServerErrorException | HttpClientErrorException e){
 			log.error("AuthService Error: {}",e.getResponseBodyAsString());
 			throw new GeneralException(UserErrorStatus.LOGOUT_FAILED);
