@@ -20,7 +20,7 @@ public enum UserErrorStatus implements BaseCode {
 
 	AUTHENTICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "USER005", "인증 정보를 찾을 수 없습니다."),
 	LOGOUT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "USER006","로그아웃에 실패하여 회원탈퇴를 실패했습니다."),
-	CREATE_CART_FAILED(HttpStatus.INTERNAL_SERVER_ERROR,"USER007","장바구니 생성에 실패하여 회원가입을 실패했습니다.");
+	CREATE_USER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "USER007", "사용자 생성에 실패했습니다.");
 	private final HttpStatus httpStatus;
 	private final String code;
 	private final String message;

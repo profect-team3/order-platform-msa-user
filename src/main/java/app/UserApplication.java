@@ -5,10 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
-@EnableRetry
 @EnableAsync
 @ComponentScan(
 	basePackages = "app",
