@@ -18,7 +18,10 @@ public enum CustomerErrorStatus implements BaseCode {
 	ADDRESS_READ_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "ADDRESS_003", "주소 목록 조회에 실패했습니다."),
 	ADDRESS_ALIAS_INVALID(HttpStatus.BAD_REQUEST, "ADDRESS_004", "주소 별명은 null이 들어갈 수 없습니다."),
 	ADDRESS_ADDRESS_INVALID(HttpStatus.BAD_REQUEST, "ADDRESS_005", "주소 별명은 null이 들어갈 수 없습니다."),
-	ADDRESS_ADDRESSDETAIL_INVALID(HttpStatus.BAD_REQUEST, "ADDRESS_006", "주소 별명은 null이 들어갈 수 없습니다.");
+	ADDRESS_ADDRESSDETAIL_INVALID(HttpStatus.BAD_REQUEST, "ADDRESS_006", "주소 별명은 null이 들어갈 수 없습니다."),
+	ADDRESS_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "ADDRESS_007", "주소 수정에 실패했습니다."),
+	ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "ADDRESS_008", "존재하지 않는 주소입니다."),
+	ADDRESS_ACCESS_DENIED(HttpStatus.FORBIDDEN, "ADDRESS_009", "해당 주소에 대한 접근 권한이 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;
