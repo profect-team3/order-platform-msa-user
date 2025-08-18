@@ -2,6 +2,9 @@ package app.domain.user.model.entity;
 
 import java.util.UUID;
 
+import app.domain.customer.dto.request.UpdateCustomerAddressRequest;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import app.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +27,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE p_user_address SET deleted_at = NOW() WHERE address_id = ?")
+@Where(clause = "deleted_at IS NULL")
 @Builder
 public class UserAddress extends BaseEntity {
 
@@ -46,4 +51,24 @@ public class UserAddress extends BaseEntity {
 
 	@Column(nullable = false)
 	private boolean isDefault = false;
+
+	public UserAddress update(UpdateCustomerAddressRequest request) {
+		if (request.getAlias() != null) {
+			this.alias = request.getAlias();
+		}
+		if (request.getAddress() != null) {
+			this.address = request.getAddress();
+		}
+		if (request.getAddressDetail() != null) {
+			this.addressDetail = request.getAddressDetail();
+		}
+		if (request.getIsDefault() != null) {
+			this.isDefault = request.getIsDefault();
+		}
+		return this;
+	}
+
+	public void unsetAsDefault() {
+		this.isDefault = false;
+	}
 }
