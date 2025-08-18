@@ -19,6 +19,7 @@ import app.domain.user.status.UserErrorStatus;
 import app.global.apiPayload.ApiResponse;
 import app.global.apiPayload.code.status.ErrorStatus;
 import app.global.apiPayload.exception.GeneralException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,7 +65,10 @@ public class UserService {
 
 
 	@Transactional
-	public void withdrawMembership(Long userId) {
+	public void withdrawMembership(Authentication authentication) {
+		String userIdStr = tokenPrincipalParser.getUserId(authentication);
+		Long userId = Long.parseLong(userIdStr);
+
 		User user = userRepository.findByUserId(userId)
 				.orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
 		user.anonymizeForWithdrawal();
