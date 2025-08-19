@@ -1,6 +1,9 @@
 package app.domain.user.model.dto.request;
 
+import java.time.LocalDate;
+
 import app.domain.user.model.entity.enums.UserRole;
+import app.domain.user.model.entity.enums.UserSex;
 import app.global.validation.annotation.ValidUserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -37,6 +40,10 @@ public class CreateUserRequest {
 	@Pattern(regexp = "^\\d{10,11}$")
 	private String phoneNumber;
 
+	private UserSex usersex;
+
+	private LocalDate birthdate;
+
 	@NotNull
 	@ValidUserRole
 	private UserRole userRole;
@@ -44,13 +51,16 @@ public class CreateUserRequest {
 	public CreateUserRequest() {
 	}
 
-	public CreateUserRequest(String username, String password, String email, String nickname, String realName, String phoneNumber, UserRole userRole) {
+	public CreateUserRequest(String username, String password, String email, String nickname, String realName, String phoneNumber, UserSex usersex, LocalDate birthdate, UserRole userRole) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.nickname = nickname;
 		this.realName = realName;
 		this.phoneNumber = phoneNumber;
+		this.usersex = usersex;
+		this.birthdate = birthdate;
 		this.userRole = userRole;
 	}
 }
+

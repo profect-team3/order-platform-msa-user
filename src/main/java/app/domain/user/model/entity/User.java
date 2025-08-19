@@ -1,9 +1,11 @@
 package app.domain.user.model.entity;
 
+import java.time.LocalDate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import app.domain.user.model.entity.enums.UserRole;
+import app.domain.user.model.entity.enums.UserSex;
 import app.global.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -61,9 +63,17 @@ public class User extends BaseEntity {
 	private String phoneNumber;
 
 	@Enumerated(EnumType.STRING)
+	@Column
+	private UserSex usersex;
+
+	@Column
+	private LocalDate birthdate;
+
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 20)
 	@Schema(description = "사용자 역할(UserRole관련)")
 	private UserRole userRole;
+
 
 	/**
 	 * 회원 탈퇴 시 개인정보를 익명화하는 메서드
@@ -76,5 +86,7 @@ public class User extends BaseEntity {
 		this.nickname = "탈퇴한 사용자";
 		this.realName = "탈퇴한 사용자";
 		this.phoneNumber = "000-0000-0000";
+		this.usersex = null;
+		this.birthdate = null;
 	}
 }
