@@ -48,6 +48,8 @@ public class UserService {
 			.nickname(createUserRequest.getNickname())
 			.realName(createUserRequest.getRealName())
 			.phoneNumber(createUserRequest.getPhoneNumber())
+			.usersex(createUserRequest.getUsersex())
+			.birthdate(createUserRequest.getBirthdate())
 			.userRole(createUserRequest.getUserRole())
 			.build();
 
