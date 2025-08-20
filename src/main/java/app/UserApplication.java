@@ -7,14 +7,6 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableAsync
-@ComponentScan(
-	basePackages = "app",
-	excludeFilters = @ComponentScan.Filter(
-		type = FilterType.ASSIGNABLE_TYPE,
-		classes = app.commonSecurity.config.SecurityConfig.class
-	)
-)
 public class UserApplication {
 
 	public static void main(String[] args) {
