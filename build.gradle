@@ -48,7 +48,7 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-    implementation files('libs/msa-common-security-1.0.4-plain.jar')
+    implementation files('libs/msa-common-security-1.0.7-plain.jar')
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
