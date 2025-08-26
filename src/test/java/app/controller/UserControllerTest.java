@@ -72,7 +72,7 @@ class UserControllerTest {
 				.build();
 			given(userService.createUser(any(CreateUserRequest.class))).willReturn(mockResponse);
 
-			mockMvc.perform(post("/signup")
+			mockMvc.perform(post("/user/signup")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(req)))
@@ -89,7 +89,7 @@ class UserControllerTest {
 			req.setUsername(" ");
 
 			// when
-			ResultActions resultActions = mockMvc.perform(post("/signup")
+			ResultActions resultActions = mockMvc.perform(post("/user/signup")
 				.with(csrf())// 올바른 API 경로
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(req)));
@@ -117,7 +117,7 @@ class UserControllerTest {
 				.willThrow(new GeneralException(UserErrorStatus.USER_ALREADY_EXISTS));
 
 			// when
-			ResultActions resultActions = mockMvc.perform(post("/signup") // 올바른 API 경로
+			ResultActions resultActions = mockMvc.perform(post("/user/signup") // 올바른 API 경로
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(req)));
@@ -146,7 +146,7 @@ class UserControllerTest {
 			willDoNothing().given(userService).withdrawMembership(any());
 
 			// when
-			ResultActions resultActions = mockMvc.perform(delete("/withdraw").with(csrf()));
+			ResultActions resultActions = mockMvc.perform(delete("/user/withdraw").with(csrf()));
 
 			// then
 			resultActions
@@ -177,7 +177,7 @@ class UserControllerTest {
 			given(userService.getUserInfo(any())).willReturn(mockResponse);
 
 			// when
-			ResultActions resultActions = mockMvc.perform(get("/info").with(csrf()));
+			ResultActions resultActions = mockMvc.perform(get("/user/info").with(csrf()));
 
 			// then
 			resultActions
@@ -198,7 +198,7 @@ class UserControllerTest {
 				.willThrow(new GeneralException(ErrorStatus._UNAUTHORIZED));
 
 			// when
-			ResultActions resultActions = mockMvc.perform(get("/info").with(csrf()));
+			ResultActions resultActions = mockMvc.perform(get("/user/info").with(csrf()));
 
 			// then
 			resultActions

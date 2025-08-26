@@ -67,7 +67,7 @@ class CustomerAddressControllerTest {
 			given(customerAddressService.getCustomerAddresses(any(Authentication.class))).willReturn(mockResponse);
 
 			// when
-			mockMvc.perform(get("/address/list").with(csrf()))
+			mockMvc.perform(get("/user/address/list").with(csrf()))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.isSuccess").value(true))
 				.andExpect(jsonPath("$.code").value(CustomerSuccessStatus.ADDRESS_LIST_FOUND.getCode()))
@@ -92,7 +92,7 @@ class CustomerAddressControllerTest {
 				.willReturn(mockResponse);
 
 			// when
-				 mockMvc.perform(post("/address/add")
+				 mockMvc.perform(post("/user/address/add")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
@@ -110,7 +110,7 @@ class CustomerAddressControllerTest {
 			AddCustomerAddressRequest request = new AddCustomerAddressRequest(null, "서울시 강남구", "101호",true);
 
 			// when
-			ResultActions resultActions = mockMvc.perform(post("/address/add")
+			ResultActions resultActions = mockMvc.perform(post("/user/address/add")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)));
@@ -144,7 +144,7 @@ class CustomerAddressControllerTest {
 				.willReturn(mockResponse);
 
 			// when
-			mockMvc.perform(put("/address/update/{addressId}", addressId)
+			mockMvc.perform(put("/user/address/update/{addressId}", addressId)
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
@@ -170,7 +170,7 @@ class CustomerAddressControllerTest {
 				.willReturn(successMessage);
 
 			// when
-			ResultActions resultActions = mockMvc.perform(get("/address/{addressId}", addressId)
+			ResultActions resultActions = mockMvc.perform(get("/user/address/{addressId}", addressId)
 				.with(csrf()));
 
 			// then
