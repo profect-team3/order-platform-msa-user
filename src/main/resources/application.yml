@@ -4,9 +4,9 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:localhost:5432}
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:pass}
     driver-class-name: org.postgresql.Driver
 
   jpa:
