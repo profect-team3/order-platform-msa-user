@@ -5,7 +5,7 @@ import java.util.UUID;
 import app.domain.customer.dto.request.UpdateCustomerAddressRequest;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import app.global.entity.BaseEntity;
+import app.commonUtil.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

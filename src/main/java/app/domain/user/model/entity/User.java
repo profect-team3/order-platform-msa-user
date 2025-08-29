@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import app.commonUtil.entity.BaseEntity;
 import app.domain.user.model.entity.enums.UserRole;
 import app.domain.user.model.entity.enums.UserSex;
-import app.global.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

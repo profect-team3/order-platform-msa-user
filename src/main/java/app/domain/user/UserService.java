@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
-import app.commonSecurity.TokenPrincipalParser;
+import app.commonUtil.apiPayload.ApiResponse;
+import app.commonUtil.apiPayload.code.status.ErrorStatus;
+import app.commonUtil.apiPayload.exception.GeneralException;
+import app.commonUtil.security.TokenPrincipalParser;
 import app.domain.user.client.InternalAuthClient;
 import app.domain.user.model.UserRepository;
 import app.domain.user.model.dto.request.CreateUserRequest;
@@ -16,9 +19,6 @@ import app.domain.user.model.dto.response.CreateUserResponse;
 import app.domain.user.model.dto.response.GetUserInfoResponse;
 import app.domain.user.model.entity.User;
 import app.domain.user.status.UserErrorStatus;
-import app.global.apiPayload.ApiResponse;
-import app.global.apiPayload.code.status.ErrorStatus;
-import app.global.apiPayload.exception.GeneralException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

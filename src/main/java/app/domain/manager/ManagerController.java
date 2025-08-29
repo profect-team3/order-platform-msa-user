@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.global.apiPayload.ApiResponse;
-import app.global.apiPayload.PagedResponse;
+import app.commonUtil.apiPayload.ApiResponse;
+import app.commonUtil.apiPayload.PagedResponse;
 import app.domain.manager.dto.response.GetCustomerDetailResponse;
 import app.domain.manager.dto.response.GetCustomerListResponse;
 import app.domain.manager.status.ManagerSuccessStatus;
