@@ -12,7 +12,7 @@ import app.domain.user.model.dto.request.CreateUserRequest;
 import app.domain.user.model.dto.response.CreateUserResponse;
 import app.domain.user.model.dto.response.GetUserInfoResponse;
 import app.domain.user.status.UserSuccessStatus;
-import app.global.apiPayload.ApiResponse;
+import app.commonUtil.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

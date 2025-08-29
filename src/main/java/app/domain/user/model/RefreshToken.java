@@ -1,6 +1,6 @@
 package app.domain.user.model;
 
-import app.global.entity.BaseEntity;
+import app.commonUtil.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

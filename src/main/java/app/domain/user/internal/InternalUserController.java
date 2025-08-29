@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.commonUtil.apiPayload.ApiResponse;
 import app.domain.user.model.dto.response.GetUserInfoResponse;
 import app.domain.user.status.UserSuccessStatus;
-import app.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
