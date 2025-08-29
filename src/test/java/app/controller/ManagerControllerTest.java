@@ -72,7 +72,7 @@ class ManagerControllerTest {
 			given(managerService.getAllCustomer(any(Pageable.class))).willReturn(mockResponse);
 
 			// when
-			ResultActions resultActions = mockMvc.perform(get("/manager/customer")
+			ResultActions resultActions = mockMvc.perform(get("/user/manager/customer")
 				.param("page", "0")
 				.param("size", "10")
 				.with(csrf()));
@@ -106,7 +106,7 @@ class ManagerControllerTest {
 			given(managerService.getCustomerDetailById(anyLong())).willReturn(mockResponse);
 
 			// when
-			ResultActions resultActions = mockMvc.perform(get("/manager/customer/{userId}", userId)
+			ResultActions resultActions = mockMvc.perform(get("/user/manager/customer/{userId}", userId)
 				.with(csrf()));
 
 			// then
@@ -128,7 +128,7 @@ class ManagerControllerTest {
 				.willThrow(new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
 			// when
-			ResultActions resultActions = mockMvc.perform(get("/manager/customer/{userId}", nonExistentUserId)
+			ResultActions resultActions = mockMvc.perform(get("/user/manager/customer/{userId}", nonExistentUserId)
 				.with(csrf()));
 
 			// then
@@ -161,7 +161,7 @@ class ManagerControllerTest {
 			given(managerService.searchCustomer(anyString(), any(Pageable.class))).willReturn(mockResponse);
 
 			// when
-			ResultActions resultActions = mockMvc.perform(get("/manager/customer/search")
+			ResultActions resultActions = mockMvc.perform(get("/user/manager/customer/search")
 				.param("keyWord", keyWord)
 				.with(csrf()));
 

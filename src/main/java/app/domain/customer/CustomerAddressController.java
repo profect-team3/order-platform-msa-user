@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "User Address", description = "address 추가 및 조회")
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/user/address")
 @RequiredArgsConstructor
 public class CustomerAddressController {
 	private final CustomerAddressService customerAddressService;

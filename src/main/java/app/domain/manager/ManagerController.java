@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/manager")
+@RequestMapping("/user/manager")
 @RequiredArgsConstructor
 @Tag(name = "관리자 API", description = "관리자의 사용자 관리 API")
 public class ManagerController {
