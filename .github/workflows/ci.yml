@@ -3,8 +3,6 @@ name: ECR Push - user
 on:
   push:
     branches: ["stage", "dev"]
-  pull_request:
-    branches: ["stage", "dev"]
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
