@@ -26,6 +26,6 @@ jobs:
 
       - name: Build & Push user service
         run: |
-          docker build -f Dockerfile -t order-test-ecr-user:latest .
-          docker tag order-test-ecr-user:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/order-test-ecr-user:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/order-test-ecr-user:latest
+          docker build -f Dockerfile -t order-user:latest .
+          docker tag order-user:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/order-user:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/order-user:latest
