@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package app.domain.user.grpc;
+
+option java_package = "app.domain.user.grpc";
+option java_outer_classname = "UserInfoProto";
+
+service UserInfoService {
+  rpc GetUserInfo(google.protobuf.Empty) returns (GetUserInfoResponse);
+}
+
+import "google/protobuf/empty.proto";
+
+enum UserSex {
+  UNKNOWN = 0;
+  MALE = 1;
+  FEMALE = 2;
+}
+
+message GetUserInfoResponse {
+  int64 user_id = 1;
+  string username = 2;
+  string email = 3;
+  string nickname = 4;
+  string real_name = 5;
+  string phone_number = 6;
+  string user_role = 7;
+  UserSex user_sex = 8;
+  string birthdate = 9;
+}
