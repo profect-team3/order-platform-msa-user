@@ -105,7 +105,7 @@ pipeline {
       steps {
         container('aws') {
           script {
-            env.IMAGE_DIGEST = sh(
+            env.IMAGE_DIGEST_SHA = sh(
               returnStdout: true,
               script: '''
                 aws ecr describe-images \
@@ -115,6 +115,8 @@ pipeline {
                   --query 'imageDetails[0].imageDigest' --output text
               '''
             ).trim()
+            env.IMAGE_DIGEST = "${env.ECR_REG}/${env.ECR_REPO}@${env.IMAGE_DIGEST_SHA}"
+            echo "[INFO] IMAGE_DIGEST_SHA=${env.IMAGE_DIGEST_SHA}"
             echo "[INFO] IMAGE_DIGEST=${env.IMAGE_DIGEST}"
           }
         }
