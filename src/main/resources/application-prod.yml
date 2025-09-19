@@ -13,3 +13,7 @@ spring:
 
 jwt:
   audience: ${AUTH_INTERNAL_AUDIENCE}
+
+auth:
+  service:
+    url: ${AUTH_SVC_URI}
